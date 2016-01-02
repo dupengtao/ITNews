@@ -11,10 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import com.dpt.itnews.demo.adapter.LargeAdapter;
-import com.dpt.itnews.net.RetrofitNetClient;
-import com.dpt.itnews.net.api.CnBlogApi;
-import com.dpt.itnews.net.parser.CnBlogNewsItemInfoParser;
-import com.dpt.itnews.vo.CnBlogNewsItemInfo;
+import com.dpt.itnews.data.net.RetrofitNetClient;
+import com.dpt.itnews.data.net.api.CnBlogApi;
+import com.dpt.itnews.data.net.parser.CnBlogNewsItemInfoParser;
+import com.dpt.itnews.data.vo.CnBlogNewsItemInfo;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -102,6 +102,7 @@ public class ItNewsListActivity extends AppCompatActivity {
         //        android.R.layout.simple_expandable_list_item_1,
         //        list);
         //lv.setAdapter(adapter);
+        
 
     }
 

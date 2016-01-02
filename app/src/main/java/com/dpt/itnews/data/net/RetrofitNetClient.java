@@ -1,6 +1,6 @@
-package com.dpt.itnews.net;
+package com.dpt.itnews.data.net;
 
-import com.dpt.itnews.net.api.CnBlogApi;
+import com.dpt.itnews.data.net.api.CnBlogApi;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;

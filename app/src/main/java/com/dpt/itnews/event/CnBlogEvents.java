@@ -1,10 +1,10 @@
 package com.dpt.itnews.event;
 
 import android.util.Log;
-import com.dpt.itnews.net.RetrofitNetClient;
-import com.dpt.itnews.net.api.CnBlogApi;
-import com.dpt.itnews.net.parser.CnBlogNewsItemInfoParser;
-import com.dpt.itnews.vo.CnBlogNewsItemInfo;
+import com.dpt.itnews.data.net.RetrofitNetClient;
+import com.dpt.itnews.data.net.api.CnBlogApi;
+import com.dpt.itnews.data.net.parser.CnBlogNewsItemInfoParser;
+import com.dpt.itnews.data.vo.CnBlogNewsItemInfo;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;

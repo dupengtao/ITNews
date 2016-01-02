@@ -1,7 +1,7 @@
-package com.dpt.itnews.net.parser;
+package com.dpt.itnews.data.net.parser;
 
 import android.util.Xml;
-import com.dpt.itnews.vo.CnBlogNewsItemInfo;
+import com.dpt.itnews.data.vo.CnBlogNewsItemInfo;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 

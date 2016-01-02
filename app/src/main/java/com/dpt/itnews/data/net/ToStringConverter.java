@@ -1,4 +1,4 @@
-package com.dpt.itnews.net;
+package com.dpt.itnews.data.net;
 
 import com.squareup.okhttp.ResponseBody;
 import retrofit.Converter;

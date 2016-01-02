@@ -1,6 +1,6 @@
-package com.dpt.itnews.net.api;
+package com.dpt.itnews.data.net.api;
 
-import com.dpt.itnews.vo.CnBlogNewsContent;
+import com.dpt.itnews.data.vo.CnBlogNewsContent;
 import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.Headers;
@@ -22,4 +22,6 @@ public interface CnBlogApi {
     @Headers("Accept: application/json")
     @GET("item/{contentId}")
     Call<CnBlogNewsContent> getNewsContentById(@Path("contentId") String id);
+
+
 }

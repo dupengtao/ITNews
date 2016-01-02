@@ -1,4 +1,4 @@
-package com.dpt.itnews.vo;
+package com.dpt.itnews.data.vo;
 
 /**
  * Created by dupengtao on 15/12/18.
