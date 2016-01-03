@@ -1,5 +1,9 @@
 package com.dpt.itnews.data.vo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by dupengtao on 15/12/18.
  */
@@ -25,6 +29,17 @@ public class CnBlogNewsItemInfo {
 
     public String getSimpleTime() {
         return published.substring(0, 10);
+    }
+
+    public long getTimeMs(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date parse = dateFormat.parse(published);
+            return parse.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override

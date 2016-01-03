@@ -10,18 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.dpt.itnews.demo.adapter.LargeAdapter;
 import com.dpt.itnews.data.net.RetrofitNetClient;
 import com.dpt.itnews.data.net.api.CnBlogApi;
-import com.dpt.itnews.data.net.parser.CnBlogNewsItemInfoParser;
-import com.dpt.itnews.data.vo.CnBlogNewsItemInfo;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.dpt.itnews.demo.adapter.LargeAdapter;
+import com.dpt.itnews.event.CnBlogEvents;
 
 public class ItNewsListActivity extends AppCompatActivity {
 
@@ -41,42 +33,46 @@ public class ItNewsListActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 //535122
-                cnBlogApi.getRecentNewsList("1", "20")
-                        .map(new Func1<String, List<CnBlogNewsItemInfo>>() {
-                            @Override
-                            public List<CnBlogNewsItemInfo> call(String s) {
-                                List<CnBlogNewsItemInfo> itemInfoList = null;
-                                try {
-                                    itemInfoList = CnBlogNewsItemInfoParser.parse(s);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    itemInfoList = new ArrayList<>();
-                                }
-                                if(itemInfoList == null){
-                                    itemInfoList = new ArrayList<>();
-                                }
-                                return itemInfoList;
-                            }
-                        })
-                        .single(new Func1<List<CnBlogNewsItemInfo>, Boolean>() {
-                            @Override
-                            public Boolean call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
-                                return cnBlogNewsItemInfoList.size()>0;
-                            }
-                        })
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<List<CnBlogNewsItemInfo>>() {
-                            @Override
-                            public void call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
-                                System.out.print(1);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        });
+                //cnBlogApi.getRecentNewsList("1", "20")
+                //        .map(new Func1<String, List<CnBlogNewsItemInfo>>() {
+                //            @Override
+                //            public List<CnBlogNewsItemInfo> call(String s) {
+                //                List<CnBlogNewsItemInfo> itemInfoList = null;
+                //                try {
+                //                    itemInfoList = CnBlogNewsItemInfoParser.parse(s);
+                //                } catch (Exception e) {
+                //                    e.printStackTrace();
+                //                    itemInfoList = new ArrayList<>();
+                //                }
+                //                if(itemInfoList == null){
+                //                    itemInfoList = new ArrayList<>();
+                //                }
+                //                return itemInfoList;
+                //            }
+                //        })
+                //        .single(new Func1<List<CnBlogNewsItemInfo>, Boolean>() {
+                //            @Override
+                //            public Boolean call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
+                //                return cnBlogNewsItemInfoList.size()>0;
+                //            }
+                //        })
+                //        .subscribeOn(Schedulers.newThread())
+                //        .observeOn(AndroidSchedulers.mainThread())
+                //        .subscribe(new Action1<List<CnBlogNewsItemInfo>>() {
+                //            @Override
+                //            public void call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
+                //                System.out.print(1);
+                //            }
+                //        }, new Action1<Throwable>() {
+                //            @Override
+                //            public void call(Throwable throwable) {
+                //                throwable.printStackTrace();
+                //            }
+                //        });
+
+                CnBlogEvents cnBlogEvents = new CnBlogEvents();
+                //cnBlogEvents.loadRemoteRecentNewsList(1,10);
+                cnBlogEvents.getLoaclRecentNewsListObservable(3);
 
 
             }

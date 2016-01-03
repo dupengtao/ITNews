@@ -33,4 +33,5 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'de.greenrobot:greendao:2.0.0'
 }
