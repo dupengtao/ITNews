@@ -72,8 +72,8 @@ public class ItNewsListActivity extends AppCompatActivity {
 
                 CnBlogEvents cnBlogEvents = new CnBlogEvents();
                 //cnBlogEvents.loadRemoteRecentNewsList(1,10);
-                cnBlogEvents.getLoaclRecentNewsListObservable(3);
-
+                //cnBlogEvents.getLocalRecentNewsListObservable(3);
+                cnBlogEvents.loadLastedRecentNewsList2(1,20);
 
             }
         });

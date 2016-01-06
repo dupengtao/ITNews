@@ -24,10 +24,98 @@ import java.util.List;
 public class CnBlogEvents {
 
     private static final String TAG = "CnBlogEvents";
+    private static final String NET_EXCEPTION = "NET_EXCEPTION";
     private final CnBlogApi cnBlogApi;
 
     public CnBlogEvents() {
         cnBlogApi = RetrofitNetClient.getInstance().getCnBlogApi();
+    }
+
+
+    public void loadLastedRecentNewsList2(int pageIndex, final int pageSize) {
+        cnBlogApi.getRecentNewsList(String.valueOf(pageIndex), String.valueOf(pageSize))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .onExceptionResumeNext(Observable.just(NET_EXCEPTION))
+                .map(new Func1<String, List<CnBlogNewsItemInfo>>() {
+                    @Override
+                    public List<CnBlogNewsItemInfo> call(String s) {
+                        LogHelper.e(TAG, "loadRemoteRecentNewsList # map");
+                        List<CnBlogNewsItemInfo> itemInfoList = null;
+                        try {
+                            itemInfoList = CnBlogNewsItemInfoParser.parse(s);
+                        } catch (Exception e) {
+                            //e.printStackTrace();
+                        }
+                        if (itemInfoList == null) {
+                            itemInfoList = new ArrayList<>();
+                        }
+                        int size = itemInfoList.size();
+                        return itemInfoList;
+                    }
+                })
+                .flatMap(new Func1<List<CnBlogNewsItemInfo>, Observable<CnBlogNewsItemInfo>>() {
+                    @Override
+                    public Observable<CnBlogNewsItemInfo> call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
+
+                        return Observable.from(cnBlogNewsItemInfoList);
+                    }
+                })
+                .map(new Func1<CnBlogNewsItemInfo, News>() {
+                    @Override
+                    public News call(CnBlogNewsItemInfo cnBlogNewsItemInfo) {
+                        LogHelper.e(TAG, "saveNewsInDb # map");
+                        String id = cnBlogNewsItemInfo.id;
+                        String link = cnBlogNewsItemInfo.link;
+                        String published = cnBlogNewsItemInfo.published;
+                        String sourceName = cnBlogNewsItemInfo.sourceName;
+                        String summary = cnBlogNewsItemInfo.summary;
+                        String title = cnBlogNewsItemInfo.title;
+                        String topicIcon = cnBlogNewsItemInfo.topicIcon;
+                        long timeMs = cnBlogNewsItemInfo.getTimeMs();
+
+                        News news = new News();
+                        news.setNews_id(id);
+                        news.setTitle(title);
+                        news.setLink(link);
+                        news.setSummary(summary);
+                        news.setPublished(published);
+                        news.setSource_name(sourceName);
+                        news.setTopicIcon(topicIcon);
+                        news.setPublished_ms(timeMs);
+                        return news;
+                    }
+                })
+                .toList()
+                .doOnNext(new Action1<List<News>>() {
+                    @Override
+                    public void call(List<News> newses) {
+                        if (newses.size() > 0) {
+                            CnBlogDbHelper cnBlogDbHelper = new CnBlogDbHelper();
+                            cnBlogDbHelper.getDaoSession().insertOrReplaceInTx(newses);
+                        }
+                    }
+                })
+                .map(new Func1<List<News>, List<News>>() {
+                    @Override
+                    public List<News> call(List<News> newses) {
+                        CnBlogDbHelper cnBlogDbHelper = new CnBlogDbHelper();
+                        Query<News> build = cnBlogDbHelper.getDaoSession().queryBuilder().orderDesc(NewsDao.Properties.Published_ms).limit(pageSize).build();
+                        return build.list();
+                    }
+                })
+                .subscribe(new Action1<List<News>>() {
+                    @Override
+                    public void call(List<News> newses) {
+                        LogHelper.e(TAG, "subscribe success call");
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogHelper.e(TAG, "subscribe failure call");
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     public void loadRemoteRecentNewsList(int pageIndex, int pageSize) {
@@ -129,9 +217,9 @@ public class CnBlogEvents {
                 });
     }
 
-    public void getLoaclRecentNewsListObservable(int size){
+    public Observable<List<News>> getLocalRecentNewsListObservable(int size) {
 
-        Observable.just(size)
+        return Observable.just(size)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<Integer, List<News>>() {
                     @Override
@@ -140,13 +228,6 @@ public class CnBlogEvents {
                         Query<News> build = cnBlogDbHelper.getDaoSession().queryBuilder().orderDesc(NewsDao.Properties.Published_ms).limit(size).build();
                         return build.list();
                     }
-                })
-                .subscribe(new Action1<List<News>>() {
-                    @Override
-                    public void call(List<News> newses) {
-                        System.out.print(1);
-                    }
                 });
-
     }
 }
