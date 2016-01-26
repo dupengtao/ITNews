@@ -19,6 +19,9 @@ public class ItNewsListActivity extends AppCompatActivity {
 
     private CnBlogApi cnBlogApi;
     private String TAG = "ItNewsListActivity";
+    private static int index=1;
+    private CnBlogEvents cnBlogEvents;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,62 +29,23 @@ public class ItNewsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_it_news_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setSubtitle("xxxxx");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        cnBlogEvents = new CnBlogEvents();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //535122
-                //cnBlogApi.getRecentNewsList("1", "20")
-                //        .map(new Func1<String, List<CnBlogNewsItemInfo>>() {
-                //            @Override
-                //            public List<CnBlogNewsItemInfo> call(String s) {
-                //                List<CnBlogNewsItemInfo> itemInfoList = null;
-                //                try {
-                //                    itemInfoList = CnBlogNewsItemInfoParser.parse(s);
-                //                } catch (Exception e) {
-                //                    e.printStackTrace();
-                //                    itemInfoList = new ArrayList<>();
-                //                }
-                //                if(itemInfoList == null){
-                //                    itemInfoList = new ArrayList<>();
-                //                }
-                //                return itemInfoList;
-                //            }
-                //        })
-                //        .single(new Func1<List<CnBlogNewsItemInfo>, Boolean>() {
-                //            @Override
-                //            public Boolean call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
-                //                return cnBlogNewsItemInfoList.size()>0;
-                //            }
-                //        })
-                //        .subscribeOn(Schedulers.newThread())
-                //        .observeOn(AndroidSchedulers.mainThread())
-                //        .subscribe(new Action1<List<CnBlogNewsItemInfo>>() {
-                //            @Override
-                //            public void call(List<CnBlogNewsItemInfo> cnBlogNewsItemInfoList) {
-                //                System.out.print(1);
-                //            }
-                //        }, new Action1<Throwable>() {
-                //            @Override
-                //            public void call(Throwable throwable) {
-                //                throwable.printStackTrace();
-                //            }
-                //        });
-
-                CnBlogEvents cnBlogEvents = new CnBlogEvents();
-                //cnBlogEvents.loadRemoteRecentNewsList(1,10);
-                //cnBlogEvents.getLocalRecentNewsListObservable(3);
-                //cnBlogEvents.loadLastedRecentNewsList2(1,20);
-
+                //cnBlogEvents.loadLastedRecentNewsList(2,3);
+                cnBlogEvents.loadNewsListByPageIndex(index++, 3);
             }
         });
 
         cnBlogApi = RetrofitNetClient.getInstance().getCnBlogApi();
 
         //RecyclerView
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_demo);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_demo);
         recyclerView.setAdapter(LargeAdapter.newInstance(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -121,5 +85,11 @@ public class ItNewsListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        cnBlogEvents.unSubscribeCollection();
+        super.onDestroy();
     }
 }
