@@ -1,7 +1,6 @@
 package com.dpt.itnews.data.net.api;
 
 import com.dpt.itnews.data.vo.CnBlogNewsContent;
-import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.Path;
@@ -21,7 +20,7 @@ public interface CnBlogApi {
     //http://wcf.open.cnblogs.com/news/item/{CONTENTID}
     @Headers("Accept: application/json")
     @GET("item/{contentId}")
-    Call<CnBlogNewsContent> getNewsContentById(@Path("contentId") String id);
+    Observable<CnBlogNewsContent> getNewsContentById(@Path("contentId") String id);
 
 
 }
